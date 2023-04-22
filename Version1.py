@@ -4,8 +4,29 @@ import requests
 import webbrowser
 import pyperclip
 
+# TODO 
+# - Secondary GUI with listed and double clickable item id's on market.
+# - Look and Feel of GUI
+
 class GenerateWindow:
     def __init__(self, master):
+        # Before forming window, get all current id's
+        url =  'https://api.warframe.market/v1/items'
+        headers = {
+            'accept': 'application/json',
+            'Language': 'en'
+        }
+
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()
+            self.marketid = {}
+            for itemData in data['payload']['items']:
+                self.marketid[itemData['url_name']] = itemData['item_name']
+        else:
+            print(f'Request failed with status code {response.status_code}')
+
         self.master = master
         master.title("Warframe.Market Orders")
         
@@ -70,8 +91,9 @@ class GenerateWindow:
 
     def getData(self):
         ordertype = self.ordertype.get()
-        marketSearch = self.marketSearch.get()
-        url = f'https://api.warframe.market/v1/items/{marketSearch}/orders?include=item'
+        item_id = self.marketSearch.get()
+        marketSearch = self.marketid[item_id]
+        url = f'https://api.warframe.market/v1/items/{item_id}/orders?include=item'
         headers = {
             'accept': 'application/json',
             'Platform': 'pc'
@@ -106,6 +128,7 @@ class GenerateWindow:
                         else:
                             self.thirdDeal.insert(0, noDealDat)
                     else:
+                        self.secondDeal.insert(0, noDealDat)
                         self.thirdDeal.insert(0, noDealDat)
                 else:
                     messagebox.showerror("Whoops Tenno!", "No Deals Available!")
@@ -120,16 +143,14 @@ class GenerateWindow:
                         offerstring = f'/w {offer["user"]} Hi, I want to sell: "{marketSearch}" for {offer["price"]} platinum. (warframe.market)'
                         self.secondDeal.insert(0, offerstring)
                         if len(offerData) >= 3:  
-                            offer = offerData[1]
+                            offer = offerData[2]
                             offerstring = f'/w {offer["user"]} Hi, I want to sell: "{marketSearch}" for {offer["price"]} platinum. (warframe.market)'
-                            self.secondDeal.insert(0, offerstring)
+                            self.thirdDeal.insert(0, offerstring)
                         else:
                             self.thirdDeal.insert(0, noDealDat)
                     else:
+                        self.secondDeal.insert(0, noDealDat)
                         self.thirdDeal.insert(0, noDealDat)
-                    offer = offerData[2]
-                    offerstring = f'/w {offer["user"]} Hi, I want to sell: "{marketSearch}" for {offer["price"]} platinum. (warframe.market)'
-                    self.thirdDeal.insert(0, offerstring)
                 else:
                     messagebox.showerror("Whoops Tenno!", "No Deals Available!")
             
