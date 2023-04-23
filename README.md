@@ -5,5 +5,7 @@ API Connection to Warframe.Market with tkinter Python Based .exe to interface wi
 - First download and install python from here: https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe
 
 - Then run the following commands in your cmd/Command Prompt:
-cd %LOCALAPPDATA%\Programs\Python\Python310\Scripts
-pip install requests pyperclip
+1. cd %LOCALAPPDATA%\Programs\Python\Python310\Scripts
+2. pip install requests pyperclip
+
+- Review the idList.csv for all the currently supported market id values you can use in the app.
