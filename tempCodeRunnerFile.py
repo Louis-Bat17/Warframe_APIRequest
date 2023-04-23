@@ -1,1 +1,1 @@
-suda_arm_spurs
+bg="#000000", fg="#FFFFFF"
