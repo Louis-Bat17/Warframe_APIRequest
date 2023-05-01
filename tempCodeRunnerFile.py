@@ -1,1 +1,1 @@
-bg="#000000", fg="#FFFFFF"
+add_command
